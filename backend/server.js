@@ -7,7 +7,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const Movimento = require("./models/Movimento");
+const Movimento = require("./models/movimento");
 
 const app = express();
 
