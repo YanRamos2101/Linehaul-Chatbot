@@ -58,6 +58,9 @@ function salvarLocal() {
     );
 }
 
+const API_URL =
+    "https://linehaul-chatbot.onrender.com";
+
 // ====================================
 // BOTÃO ETAPA
 // ====================================
@@ -389,7 +392,7 @@ async function buscarViagem(nf) {
     try {
 
         const resposta = await fetch(
-            `http://192.168.0.8:3000/movimentos/nf/${nf}`
+            `${API_URL}/movimentos/nf/${nf}`
         );
 
         if (!resposta.ok) {
@@ -490,7 +493,7 @@ async function salvarMongo() {
         console.log("ENVIANDO:", viagem);
 
         const resposta = await fetch(
-            "http://192.168.0.8:3000/movimentos",
+            `${API_URL}/movimentos`,
             {
                 method: "POST",
                 headers: {
