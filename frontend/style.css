@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Playfair+Display:wght@700&display=swap');
+
+/* =========================
+   GERAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background: #0B0B0B;
+
+    color: white;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    margin: auto;
+
+    padding: 20px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 40px;
+
+    margin-bottom: 20px;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+
+    max-height: 90px;
+
+    width: 90px;
+
+    object-fit: contain;
+}
+
+/* =========================
+   TÍTULO
+========================= */
+
+.header h1 {
+
+    margin: 0;
+
+    color: #FFE600;
+
+    font-size: 20px;
+
+    font-weight: 700;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+#chat {
+
+    height: 60vh;
+
+    overflow-y: auto;
+
+    background: #151515;
+
+    border-radius: 15px;
+
+    padding: 15px;
+
+    border: 1px solid #222;
+}
+
+/* =========================
+   BOLHA BOT
+========================= */
+
+.bot {
+
+    background: #FFE600;
+
+    color: black;
+
+    padding: 12px;
+
+    border-radius: 15px 15px 15px 5px;
+
+    margin-bottom: 10px;
+
+    width: fit-content;
+
+    max-width: 80%;
+
+    font-weight: bold;
+}
+
+/* =========================
+   BOLHA USUÁRIO
+========================= */
+
+.user {
+
+    background: #2A2A2A;
+
+    color: white;
+
+    padding: 12px;
+
+    border-radius: 15px 15px 5px 15px;
+
+    margin-bottom: 10px;
+
+    margin-left: auto;
+
+    width: fit-content;
+
+    max-width: 80%;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.input-area {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+#userInput {
+
+    flex: 1;
+
+    padding: 15px;
+
+    background: #1A1A1A;
+
+    border: 2px solid #FFE600;
+
+    border-radius: 10px;
+
+    color: white;
+
+    font-size: 16px;
+}
+
+#userInput:focus {
+
+    outline: none;
+
+    border-color: #FFD000;
+}
+
+/* =========================
+   BOTÃO ENVIAR
+========================= */
+
+.input-area button {
+
+    border: none;
+
+    background: #FFE600;
+
+    color: black;
+
+    font-weight: bold;
+
+    padding: 15px 20px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.input-area button:hover {
+
+    background: #FFD000;
+}
+
+/* =========================
+   BOTÃO ETAPA
+========================= */
+
+#btnEtapa {
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    border: none;
+
+    background: #FFE600;
+
+    color: black;
+
+    font-weight: bold;
+
+    font-size: 18px;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    display: none;
+}
+
+#btnEtapa:hover {
+
+    background: #FFD000;
+}
+
+/* =========================
+   SCROLL
+========================= */
+
+#chat::-webkit-scrollbar {
+
+    width: 6px;
+}
+
+#chat::-webkit-scrollbar-thumb {
+
+    background: #FFE600;
+
+    border-radius: 10px;
+}
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 600px) {
+
+    .header h1 {
+
+        font-size: 18px;
+    }
+
+    .logo {
+
+        max-height: 22px;
+    }
+
+    #chat {
+
+        height: 55vh;
+    }
+}

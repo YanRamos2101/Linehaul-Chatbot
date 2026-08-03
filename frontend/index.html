@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Fulfillment Linehaul</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <img src="logo.png" alt="logo" class="logo">
+
+            <h1>Fulfillment Linehaul</h1>
+
+        </div>
+
+        <div id="chat"></div>
+
+        <div class="input-area">
+
+            <input
+                id="userInput"
+                type="text"
+                placeholder="Digite aqui">
+
+            <button onclick="sendMessage()">
+                Enviar
+            </button>
+
+        </div>
+
+        <button
+            id="btnEtapa"
+            onclick="registrarEtapa()">
+
+            INÍCIO CARREGAMENTO
+
+        </button>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
