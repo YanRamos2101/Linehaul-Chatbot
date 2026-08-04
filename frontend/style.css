@@ -57,9 +57,9 @@ body {
 
 .logo {
 
-    max-height: 90px;
+    max-height: 140px;
 
-    width: 90px;
+    width: 140px;
 
     object-fit: contain;
 }
