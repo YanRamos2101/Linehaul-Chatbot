@@ -57,9 +57,11 @@ body {
 
 .logo {
 
-    max-height: 140px;
+    max-height: 240px;
 
-    width: 140px;
+    width: 240px;
+
+    align-items: center;
 
     object-fit: contain;
 }
