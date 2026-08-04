@@ -42,11 +42,11 @@ body {
 
     display: flex;
 
-    justify-content: center;
+    flex-direction: column;
 
     align-items: center;
 
-    gap: 40px;
+    justify-content: center;
 
     margin-bottom: 20px;
 }
@@ -57,13 +57,11 @@ body {
 
 .logo {
 
-    max-height: 240px;
+    width: 180px;
 
-    width: 240px;
+    height: auto;
 
-    align-items: center;
-
-    object-fit: contain;
+    margin-bottom: 10px;
 }
 
 /* =========================
@@ -79,7 +77,10 @@ body {
     font-size: 20px;
 
     font-weight: 700;
+
+    text-align: center;
 }
+
 
 /* =========================
    CHAT
@@ -265,14 +266,16 @@ body {
 
 @media (max-width: 600px) {
 
+    .logo {
+
+        width: 120px;
+
+        height: auto;
+    }
+
     .header h1 {
 
         font-size: 18px;
-    }
-
-    .logo {
-
-        max-height: 22px;
     }
 
     #chat {
