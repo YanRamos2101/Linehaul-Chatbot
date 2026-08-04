@@ -1,25 +1,41 @@
 const mongoose = require("mongoose");
 
-const MovimentoSchema =
-new mongoose.Schema({
+const EtapaSchema = {
+
+    dataHora: String,
+
+    latitude: Number,
+
+    longitude: Number
+};
+
+const MovimentoSchema = new mongoose.Schema({
 
     motorista: String,
+
     placa: String,
+
     cdd: String,
+
     nf: String,
 
-    InicioCarregamento: String,
-    FimCarregamento: String,
+    InicioCarregamento: EtapaSchema,
 
-    Saida: String,
-    Chegada: String,
+    FimCarregamento: EtapaSchema,
 
-    InicioDescarga: String,
-    FimDescarga: String,
+    Saida: EtapaSchema,
 
-    FimConferencia: String,
+    Chegada: EtapaSchema,
 
-    Retorno: String,
+    InicioDescarga: EtapaSchema,
+
+    FimDescarga: EtapaSchema,
+
+    FimConferencia: EtapaSchema,
+
+    Retorno: EtapaSchema,
+
+    statusEtapa: Number,
 
     criadoEm: {
         type: Date,
@@ -29,7 +45,6 @@ new mongoose.Schema({
 });
 
 module.exports =
-    mongoose.models.Movimento ||
     mongoose.model(
         "Movimento",
         MovimentoSchema

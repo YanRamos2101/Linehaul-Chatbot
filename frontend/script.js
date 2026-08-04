@@ -14,6 +14,36 @@ let statusEtapa =
 const chat =
     document.getElementById("chat");
 
+async function obterLocalizacao() {
+
+    return new Promise((resolve, reject) => {
+
+        navigator.geolocation.getCurrentPosition(
+
+            (posicao) => {
+
+                resolve({
+                    latitude: posicao.coords.latitude,
+                    longitude: posicao.coords.longitude
+                });
+
+            },
+
+            (erro) => {
+
+                reject(erro);
+
+            },
+
+            {
+                enableHighAccuracy: true
+            }
+
+        );
+
+    });
+
+}
 // ====================================
 // CHAT
 // ====================================
@@ -278,6 +308,8 @@ function processar(texto) {
 // ====================================
 
 async function registrarEtapa() {
+    const localizacao =
+        await obterLocalizacao();
 
     switch (statusEtapa) {
 
@@ -305,9 +337,11 @@ async function registrarEtapa() {
 
         case 3:
 
-            viagem.Saida =
-                new Date().toLocaleString();
-
+            viagem.Saida = {
+                dataHora: new Date().toLocaleString(),
+                latitude: localizacao.latitude,
+                longitude: localizacao.longitude
+            };
             bot("✅ Saída registrada");
 
             statusEtapa = 4;
@@ -316,9 +350,11 @@ async function registrarEtapa() {
 
         case 4:
 
-            viagem.Chegada =
-                new Date().toLocaleString();
-
+            viagem.Chegada = {
+                dataHora: new Date().toLocaleString(),
+                latitude: localizacao.latitude,
+                longitude: localizacao.longitude
+            };
             bot("✅ Chegada registrada");
 
             statusEtapa = 5;
