@@ -315,9 +315,9 @@ async function registrarEtapa() {
 
         case 1:
 
-            viagem.InicioCarregamento =
-                new Date().toLocaleString();
-
+            viagem.InicioCarregamento = {
+                dataHora: new Date().toLocaleString()
+            };
             bot("✅ Início Carregamento registrado");
 
             statusEtapa = 2;
@@ -326,9 +326,9 @@ async function registrarEtapa() {
 
         case 2:
 
-            viagem.FimCarregamento =
-                new Date().toLocaleString();
-
+            viagem.FimCarregamento = {
+                dataHora: new Date().toLocaleString()
+            };
             bot("✅ Fim Carregamento registrado");
 
             statusEtapa = 3;
@@ -363,9 +363,9 @@ async function registrarEtapa() {
 
         case 5:
 
-            viagem.InicioDescarga =
-                new Date().toLocaleString();
-
+            viagem.InicioDescarga = {
+                dataHora: new Date().toLocaleString()
+            };
             bot("✅ Início Descarga registrado");
 
             statusEtapa = 6;
@@ -374,9 +374,9 @@ async function registrarEtapa() {
 
         case 6:
 
-            viagem.FimDescarga =
-                new Date().toLocaleString();
-
+            viagem.FimDescarga = {
+                dataHora: new Date().toLocaleString()
+            };
             bot("✅ Fim Descarga registrada");
 
             statusEtapa = 7;
@@ -385,9 +385,9 @@ async function registrarEtapa() {
 
         case 7:
 
-            viagem.FimConferencia =
-                new Date().toLocaleString();
-
+            viagem.FimConferencia = {
+                dataHora: new Date().toLocaleString()
+            };
             bot("✅ Fim Conferência registrada");
 
             statusEtapa = 8;
@@ -396,9 +396,9 @@ async function registrarEtapa() {
 
         case 8:
 
-            viagem.Retorno =
-                new Date().toLocaleString();
-
+            viagem.Retorno = {
+                dataHora: new Date().toLocaleString()
+            };
             statusEtapa = 9;
 
             viagem.statusEtapa = 9;
