@@ -2,6 +2,12 @@
 // DADOS
 // ====================================
 
+let aguardandoNF =
+    JSON.parse(
+        localStorage.getItem(
+            "aguardandoNF"
+        )
+    ) || false;
 let viagem =
     JSON.parse(localStorage.getItem("viagem")) || {};
 
@@ -233,6 +239,32 @@ function sendMessage() {
 
     document.getElementById("userInput").value = "";
 
+    if (aguardandoNF) {
+
+        viagem.nf = texto.trim();
+
+        aguardandoNF = false;
+
+        localStorage.setItem(
+            "aguardandoNF",
+            false
+        );
+
+        statusEtapa = 3;
+
+        salvarLocal();
+
+        bot(
+            `✅ NF registrada: ${viagem.nf}`
+        );
+
+        atualizarBotao();
+
+        mostrarEtapaAtual();
+
+        return;
+    }
+
     processar(texto);
 }
 
@@ -289,26 +321,6 @@ function processar(texto) {
 
             break;
 
-        case 3:
-
-            viagem.nf = texto;
-
-            etapa++;
-
-            salvarLocal();
-
-            bot("✅ Viagem criada!");
-
-            bot("Agora utilize o botão da etapa.");
-
-            document.getElementById("btnEtapa")
-                .style.display = "block";
-
-            atualizarBotao();
-
-            mostrarEtapaAtual();
-
-            break;
     }
 }
 
@@ -544,6 +556,13 @@ if (etapa < 3) {
     mostrarEtapaAtual();
 }
 
+    if (aguardandoNF) {
+
+        bot(
+            "📦 Informe a NF para continuar:"
+        );
+
+    }
 
 // ====================================
 // SALVAR NO MONGODB
