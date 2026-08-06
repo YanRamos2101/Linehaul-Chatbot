@@ -272,11 +272,20 @@ function processar(texto) {
 
             viagem.cdd = texto;
 
-            etapa++;
+            etapa = 4;
 
             salvarLocal();
 
-            bot("📦 Informe a NF:");
+            bot("✅ Viagem criada!");
+
+            bot("Agora utilize o botão da etapa.");
+
+            document.getElementById("btnEtapa")
+                .style.display = "block";
+
+            atualizarBotao();
+
+            mostrarEtapaAtual();
 
             break;
 
@@ -329,6 +338,24 @@ async function registrarEtapa() {
             viagem.FimCarregamento = {
                 dataHora: new Date().toLocaleString()
             };
+
+            salvarLocal();
+
+            const nf =
+                prompt("Informe a NF:");
+
+            if (!nf || nf.trim() === "") {
+
+                bot("⚠️ NF obrigatória.");
+
+                return;
+
+            }
+
+            viagem.nf = nf.trim();
+
+            bot("✅ NF registrada: " + nf);
+
             bot("✅ Fim Carregamento registrado");
 
             statusEtapa = 3;
@@ -397,7 +424,9 @@ async function registrarEtapa() {
         case 8:
 
             viagem.Retorno = {
-                dataHora: new Date().toLocaleString()
+                dataHora: new Date().toLocaleString(),
+                latitude: localizacao.latitude,
+                longitude: localizacao.longitude
             };
             statusEtapa = 9;
 
@@ -491,7 +520,7 @@ function recuperarCadastro() {
 // INICIALIZAÇÃO
 // ====================================
 
-if (etapa < 4) {
+if (etapa < 3) {
 
     document.getElementById("btnEtapa")
         .style.display = "none";
