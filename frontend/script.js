@@ -255,7 +255,8 @@ function sendMessage() {
         salvarLocal();
 
         bot(
-            `✅ NF registrada: ${viagem.nf}`
+            "✅ NF registrada: " +
+            viagem.nf
         );
 
         atualizarBotao();
@@ -264,7 +265,6 @@ function sendMessage() {
 
         return;
     }
-
     processar(texto);
 }
 
@@ -353,27 +353,18 @@ async function registrarEtapa() {
 
             salvarLocal();
 
-            const nf =
-                prompt("Informe a NF:");
+            aguardandoNF = true;
 
-            if (!nf || nf.trim() === "") {
-
-                bot("⚠️ NF obrigatória.");
-
-                return;
-
-            }
-
-            viagem.nf = nf.trim();
-
-            bot("✅ NF registrada: " + nf);
+            localStorage.setItem(
+                "aguardandoNF",
+                true
+            );
 
             bot("✅ Fim Carregamento registrado");
 
-            statusEtapa = 3;
+            bot("📦 Informe a NF para continuar:");
 
-            break;
-
+            return;
         case 3:
 
             viagem.Saida = {
