@@ -387,9 +387,16 @@ async function registrarEtapa() {
                 latitude: localizacao.latitude,
                 longitude: localizacao.longitude
             };
-            bot("✅ Saída registrada");
 
             statusEtapa = 4;
+
+            viagem.statusEtapa = 4;
+
+            salvarLocal();
+
+            await atualizarMongo();
+
+            bot("✅ Saída registrada");
 
             break;
 
@@ -400,9 +407,16 @@ async function registrarEtapa() {
                 latitude: localizacao.latitude,
                 longitude: localizacao.longitude
             };
-            bot("✅ Chegada registrada");
 
             statusEtapa = 5;
+
+            viagem.statusEtapa = 5;
+
+            salvarLocal();
+
+            await atualizarMongo();
+
+            bot("✅ Chegada registrada");
 
             break;
 
@@ -411,9 +425,16 @@ async function registrarEtapa() {
             viagem.InicioDescarga = {
                 dataHora: new Date().toLocaleString()
             };
-            bot("✅ Início Descarga registrado");
 
             statusEtapa = 6;
+
+            viagem.statusEtapa = 6;
+
+            salvarLocal();
+
+            await atualizarMongo();
+
+            bot("✅ Início Descarga registrado");
 
             break;
 
@@ -422,9 +443,16 @@ async function registrarEtapa() {
             viagem.FimDescarga = {
                 dataHora: new Date().toLocaleString()
             };
-            bot("✅ Fim Descarga registrada");
 
             statusEtapa = 7;
+
+            viagem.statusEtapa = 7;
+
+            salvarLocal();
+
+            await atualizarMongo();
+
+            bot("✅ Fim Descarga registrada");
 
             break;
 
@@ -433,9 +461,16 @@ async function registrarEtapa() {
             viagem.FimConferencia = {
                 dataHora: new Date().toLocaleString()
             };
-            bot("✅ Fim Conferência registrada");
 
             statusEtapa = 8;
+
+            viagem.statusEtapa = 8;
+
+            salvarLocal();
+
+            await atualizarMongo();
+
+            bot("✅ Fim Conferência registrada");
 
             break;
 
@@ -540,29 +575,40 @@ function recuperarCadastro() {
 // INICIALIZAÇÃO
 // ====================================
 
-if (etapa < 3) {
 
-    document.getElementById("btnEtapa")
-        .style.display = "none";
 
-    recuperarCadastro();
+async function inicializarSistema() {
 
-} else {
+    if (viagem._id) {
 
-    document.getElementById("btnEtapa")
-        .style.display = "block";
+        await recuperarViagemMongo();
 
-    bot("🚚 Viagem recuperada");
+    }
 
-    bot(
-        "👤 Motorista: " +
-        viagem.motorista
-    );
+    if (etapa < 3) {
 
-    atualizarBotao();
+        document.getElementById("btnEtapa")
+            .style.display = "none";
 
-    mostrarEtapaAtual();
-}
+        recuperarCadastro();
+
+    } else {
+
+        document.getElementById("btnEtapa")
+            .style.display = "block";
+
+        bot("🚚 Viagem recuperada");
+
+        bot(
+            "👤 Motorista: " +
+            viagem.motorista
+        );
+
+        atualizarBotao();
+
+        mostrarEtapaAtual();
+
+    }
 
     if (aguardandoNF) {
 
@@ -571,6 +617,8 @@ if (etapa < 3) {
         );
 
     }
+
+}
 
 // ====================================
 // SALVAR NO MONGODB
@@ -662,6 +710,93 @@ async function atualizarMongo() {
             "❌ Erro ao atualizar viagem",
             erro
         );
+
+    }
+
+}
+
+async function recuperarViagemMongo() {
+
+    try {
+
+        if (!viagem._id) {
+
+            return null;
+
+        }
+
+        const resposta = await fetch(
+            `${API_URL}/movimentos/${viagem._id}`
+        );
+
+        if (!resposta.ok) {
+
+            return null;
+
+        }
+
+        const dados =
+            await resposta.json();
+
+        viagem = dados;
+
+        if (viagem.statusEtapa) {
+
+            statusEtapa =
+                viagem.statusEtapa;
+
+        }
+        
+        if (
+            viagem.motorista &&
+            viagem.placa &&
+            viagem.cdd
+        ) {
+
+            etapa = 4;
+
+        }
+
+        if (
+            viagem.FimCarregamento &&
+            !viagem.nf
+        ) {
+
+            aguardandoNF = true;
+
+            localStorage.setItem(
+                "aguardandoNF",
+                true
+            );
+
+        } else {
+
+            aguardandoNF = false;
+
+            localStorage.setItem(
+                "aguardandoNF",
+                false
+            );
+
+        }
+
+        salvarLocal();
+
+        console.log(
+            "✅ Viagem recuperada do MongoDB",
+            viagem
+        );
+
+        return viagem;
+
+    } catch (erro) {
+
+        console.error(
+            "❌ Erro ao recuperar viagem",
+            erro
+        );
+
+        return null;
 
     }
 
