@@ -620,6 +620,8 @@ async function inicializarSistema() {
 
 }
 
+inicializarSistema();
+
 // ====================================
 // SALVAR NO MONGODB
 // ====================================
