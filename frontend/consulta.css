@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background: #0B0B0B;
+
+    color: white;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 20px;
+}
+
+h1 {
+
+    color: #FFE600;
+
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+.barra-pesquisa {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+#filtro {
+
+    flex: 1;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    border: 2px solid #FFE600;
+
+    background: #151515;
+
+    color: white;
+
+    font-size: 16px;
+}
+
+#filtro:focus {
+
+    outline: none;
+}
+
+button {
+
+    border: none;
+
+    background: #FFE600;
+
+    color: black;
+
+    font-weight: bold;
+
+    border-radius: 10px;
+
+    padding: 15px 20px;
+
+    cursor: pointer;
+}
+
+button:hover {
+
+    background: #FFD000;
+}
+
+.resultado-card {
+
+    background: #151515;
+
+    border: 1px solid #222;
+
+    border-radius: 15px;
+
+    padding: 15px;
+
+    margin-bottom: 15px;
+}
+
+.resultado-card b {
+
+    color: #FFE600;
+}
+
+#detalhes {
+
+    background: #151515;
+
+    border: 1px solid #222;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    margin-top: 20px;
+}
+
+#detalhes h2 {
+
+    color: #FFE600;
+
+    margin-top: 0;
+}
+
+.etapa {
+
+    padding: 10px;
+
+    margin-bottom: 10px;
+
+    background: #202020;
+
+    border-radius: 10px;
+}
+
+.logo {
+
+    display: block;
+
+    margin: auto;
+
+    width: 180px;
+
+    margin-bottom: 10px;
+}
+
+.header h1 {
+
+    margin: 10;
+
+    color: #FFE600;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+
+    .barra-pesquisa {
+
+        flex-direction: column;
+    }
+
+    button {
+
+        width: 100%;
+    }
+
+}

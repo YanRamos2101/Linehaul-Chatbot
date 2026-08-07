@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Consulta de Viagens</title>
+
+    <link rel="stylesheet" href="consulta.css">
+
+</head>
+
+<body>
+
+
+
+
+    <div class="container">
+
+        <div class="header">
+
+            <img src="logo.png" alt="logo" class="logo">
+            <h1>CONSULTA DE VIAGENS</h1>
+    
+        </div>
+        <div class="barra-pesquisa">
+
+            <input
+                type="text"
+                id="filtro"
+                placeholder="NF, Placa ou Motorista"
+            >
+
+            <button onclick="consultar()">
+                Buscar
+            </button>
+
+            <button onclick="exportarExcel()">
+                Exportar Excel
+            </button>
+
+        </div>
+
+        <div id="resultado"></div>
+
+        <div id="detalhes"></div>
+
+    </div>
+
+    <script src="consulta.js"></script>
+
+</body>
+
+</html>

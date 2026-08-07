@@ -6,9 +6,8 @@ const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const ExcelJS = require("exceljs");
 const Movimento = require("./models/movimento");
-
 const app = express();
 
 app.use(cors());
@@ -189,6 +188,143 @@ app.get("/consultas", async (req, res) => {
                 .sort({ criadoEm: -1 });
 
         res.json(viagens);
+
+    } catch (erro) {
+
+        res.status(500).json({
+            erro: erro.message
+        });
+
+    }
+
+});
+
+app.get("/exportar", async (req, res) => {
+
+    try {
+
+        const viagens =
+            await Movimento.find()
+                .sort({ criadoEm: -1 });
+
+        const workbook =
+            new ExcelJS.Workbook();
+
+        const sheet =
+            workbook.addWorksheet(
+                "Viagens"
+            );
+
+        sheet.columns = [
+
+            {
+                header: "Motorista",
+                key: "motorista",
+                width: 25
+            },
+
+            {
+                header: "Placa",
+                key: "placa",
+                width: 15
+            },
+
+            {
+                header: "CDD",
+                key: "cdd",
+                width: 15
+            },
+
+            {
+                header: "NF",
+                key: "nf",
+                width: 15
+            },
+
+            {
+                header: "Status",
+                key: "statusEtapa",
+                width: 20
+            },
+
+            {
+                header: "Início Carregamento",
+                key: "inicio",
+                width: 25
+            },
+
+            {
+                header: "Fim Carregamento",
+                key: "fim",
+                width: 25
+            },
+
+            {
+                header: "Saída",
+                key: "saida",
+                width: 25
+            },
+
+            {
+                header: "Chegada",
+                key: "chegada",
+                width: 25
+            },
+
+            {
+                header: "Retorno",
+                key: "retorno",
+                width: 25
+            }
+
+        ];
+
+        viagens.forEach(v => {
+
+            sheet.addRow({
+
+                motorista: v.motorista,
+
+                placa: v.placa,
+
+                cdd: v.cdd,
+
+                nf: v.nf,
+
+                statusEtapa: v.statusEtapa,
+
+                inicio:
+                    v.InicioCarregamento?.dataHora,
+
+                fim:
+                    v.FimCarregamento?.dataHora,
+
+                saida:
+                    v.Saida?.dataHora,
+
+                chegada:
+                    v.Chegada?.dataHora,
+
+                retorno:
+                    v.Retorno?.dataHora
+
+            });
+
+        });
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=viagens.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+
+        res.end();
 
     } catch (erro) {
 
