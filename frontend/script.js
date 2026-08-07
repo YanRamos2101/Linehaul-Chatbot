@@ -203,7 +203,7 @@ function mostrarEtapaAtual() {
 // ENVIO
 // ====================================
 
-function sendMessage() {
+async function sendMessage() {
 
     let texto =
         document.getElementById("userInput").value;
@@ -252,7 +252,11 @@ function sendMessage() {
 
         statusEtapa = 3;
 
+        viagem.statusEtapa = 3;
+
         salvarLocal();
+
+        await atualizarMongo();
 
         bot(
             "✅ NF registrada: " +
@@ -272,7 +276,7 @@ function sendMessage() {
 // CADASTRO
 // ====================================
 
-function processar(texto) {
+async function processar(texto) {
 
     switch (etapa) {
 
@@ -308,6 +312,8 @@ function processar(texto) {
 
             salvarLocal();
 
+            await criarViagemMongo();
+
             bot("✅ Viagem criada!");
 
             bot("Agora utilize o botão da etapa.");
@@ -320,10 +326,8 @@ function processar(texto) {
             mostrarEtapaAtual();
 
             break;
-
     }
 }
-
 // ====================================
 // ETAPAS
 // ====================================
@@ -339,19 +343,29 @@ async function registrarEtapa() {
             viagem.InicioCarregamento = {
                 dataHora: new Date().toLocaleString()
             };
-            bot("✅ Início Carregamento registrado");
+
+            viagem.statusEtapa = 2;
 
             statusEtapa = 2;
 
-            break;
+            salvarLocal();
 
+            await atualizarMongo();
+
+            bot("✅ Início Carregamento registrado");
+
+            break;
         case 2:
 
             viagem.FimCarregamento = {
                 dataHora: new Date().toLocaleString()
             };
 
+            viagem.statusEtapa = 2;
+
             salvarLocal();
+
+            await atualizarMongo();
 
             aguardandoNF = true;
 
@@ -365,6 +379,7 @@ async function registrarEtapa() {
             bot("📦 Informe a NF para continuar:");
 
             return;
+
         case 3:
 
             viagem.Saida = {
@@ -435,7 +450,9 @@ async function registrarEtapa() {
 
             viagem.statusEtapa = 9;
 
-            await salvarMongo();
+            salvarLocal();
+
+            await atualizarMongo();
 
             novaViagem();
 
@@ -559,13 +576,9 @@ if (etapa < 3) {
 // SALVAR NO MONGODB
 // ====================================
 
-async function salvarMongo() {
-
-    console.log("salvarMongo FOI CHAMADO");
+async function criarViagemMongo() {
 
     try {
-
-        console.log("ENVIANDO:", viagem);
 
         const resposta = await fetch(
             `${API_URL}/movimentos`,
@@ -578,24 +591,80 @@ async function salvarMongo() {
             }
         );
 
-        console.log("STATUS:", resposta.status);
+        const resultado =
+            await resposta.json();
+
+        if (
+            resultado.sucesso &&
+            resultado.dados &&
+            resultado.dados._id
+        ) {
+
+            viagem._id =
+                resultado.dados._id;
+
+            salvarLocal();
+
+            console.log(
+                "✅ Viagem criada no MongoDB",
+                viagem._id
+            );
+
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "❌ Erro ao criar viagem",
+            erro
+        );
+
+    }
+
+}
+
+async function atualizarMongo() {
+
+    try {
+
+        if (!viagem._id) {
+
+            console.error(
+                "❌ Viagem sem _id"
+            );
+
+            return;
+
+        }
+
+        const resposta = await fetch(
+            `${API_URL}/movimentos/${viagem._id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(viagem)
+            }
+        );
 
         const resultado =
             await resposta.json();
 
         console.log(
-            "✅ Viagem salva no MongoDB",
+            "✅ Viagem atualizada",
             resultado
         );
 
     } catch (erro) {
 
         console.error(
-            "❌ Erro ao salvar no MongoDB",
+            "❌ Erro ao atualizar viagem",
             erro
         );
 
     }
+
 }
 
 function novaViagem() {

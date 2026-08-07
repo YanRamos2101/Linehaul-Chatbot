@@ -66,6 +66,81 @@ app.get("/movimentos", async (req, res) => {
 
 });
 
+
+app.get("/movimentos/:id", async (req, res) => {
+
+    try {
+
+        const movimento =
+            await Movimento.findById(
+                req.params.id
+            );
+
+        if (!movimento) {
+
+            return res.status(404).json({
+                sucesso: false,
+                erro: "Viagem não encontrada"
+            });
+
+        }
+
+        res.json(movimento);
+
+    } catch (erro) {
+
+        res.status(500).json({
+            sucesso: false,
+            erro: erro.message
+        });
+
+    }
+
+});
+
+app.put("/movimentos/:id", async (req, res) => {
+
+    try {
+
+        const movimento =
+            await Movimento.findByIdAndUpdate(
+
+                req.params.id,
+
+                req.body,
+
+                {
+                    new: true,
+                    runValidators: true
+                }
+
+            );
+
+        if (!movimento) {
+
+            return res.status(404).json({
+                sucesso: false,
+                erro: "Viagem não encontrada"
+            });
+
+        }
+
+        res.json({
+            sucesso: true,
+            dados: movimento
+        });
+
+    } catch (erro) {
+
+        res.status(500).json({
+            sucesso: false,
+            erro: erro.message
+        });
+
+    }
+
+});
+
 app.get(
     "/movimentos/nf/:nf",
     async (req, res) => {
