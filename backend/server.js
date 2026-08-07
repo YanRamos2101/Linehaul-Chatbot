@@ -163,6 +163,42 @@ app.get(
     }
 );
 
+app.get("/consultas", async (req, res) => {
+
+    try {
+
+        const filtro = {};
+
+        if (req.query.nf) {
+            filtro.nf = req.query.nf;
+        }
+
+        if (req.query.placa) {
+            filtro.placa = req.query.placa;
+        }
+
+        if (req.query.motorista) {
+            filtro.motorista = new RegExp(
+                req.query.motorista,
+                "i"
+            );
+        }
+
+        const viagens =
+            await Movimento.find(filtro)
+                .sort({ criadoEm: -1 });
+
+        res.json(viagens);
+
+    } catch (erro) {
+
+        res.status(500).json({
+            erro: erro.message
+        });
+
+    }
+
+});
 
 app.listen(process.env.PORT, "0.0.0.0", () => {
     console.log(
