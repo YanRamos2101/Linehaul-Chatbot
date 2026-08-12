@@ -113,36 +113,17 @@ function mostrarResultados(viagens) {
         resultado.innerHTML += `
             <div class="resultado-card">
 
-                <p>
-                    <b>Motorista:</b>
-                    ${viagem.motorista || "-"}
-                </p>
-
-                <p>
-                    <b>Placa:</b>
-                    ${viagem.placa || "-"}
-                </p>
-
-                <p>
-                    <b>CDD:</b>
-                    ${viagem.cdd || "-"}
-                </p>
-
-                <p>
-                    <b>NF:</b>
-                    ${viagem.nf || "-"}
-                </p>
-
-                <p>
-                    <b>Status:</b>
-                    ${obterStatusTexto(
-                        viagem.statusEtapa
-                    )}
-                </p>
+                <p><b>Motorista:</b> ${viagem.motorista || "-"}</p>
+                <p><b>Placa:</b> ${viagem.placa || "-"}</p>
+                <p><b>CDD:</b> ${viagem.cdd || "-"}</p>
+                <p><b>NF:</b> ${viagem.nf || "-"}</p>
+                <p><b>Status:</b> ${obterStatusTexto(viagem.statusEtapa)}</p>
 
                 <button onclick="verDetalhes('${viagem._id}')">
                     Ver Detalhes
                 </button>
+
+                <div id="detalhes-${viagem._id}" class="detalhes-card"></div>
 
             </div>
         `;
@@ -161,27 +142,10 @@ async function verDetalhes(id) {
     const viagem =
         await resposta.json();
 
-    document.getElementById(
-        "detalhes"
-    ).innerHTML = `
+    const container =
+        document.getElementById(`detalhes-${id}`);
 
-        <p><b>Motorista:</b>
-        ${viagem.motorista || "-"}</p>
-
-        <p><b>Placa:</b>
-        ${viagem.placa || "-"}</p>
-
-        <p><b>CDD:</b>
-        ${viagem.cdd || "-"}</p>
-
-        <p><b>NF:</b>
-        ${viagem.nf || "-"}</p>
-
-        <p><b>Status:</b>
-        ${obterStatusTexto(
-            viagem.statusEtapa
-        )}</p>
-
+    container.innerHTML = `
         <hr>
 
         <p>✅ Início Carregamento:
@@ -207,7 +171,6 @@ async function verDetalhes(id) {
 
         <p>✅ Retorno:
         ${viagem.Retorno?.dataHora || "-"}</p>
-
     `;
 
 }
