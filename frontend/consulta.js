@@ -192,6 +192,12 @@ async function verDetalhes(id) {
 
         <p>✅ Retorno:
         ${viagem.Retorno?.dataHora || "-"}</p>
+
+        <p>
+
+        <b>Observação:</b>
+        ${viagem.observacao || "Sem observações"}
+        </p>
     `;
 
     setTimeout(() => {

@@ -2,6 +2,11 @@
 // DADOS
 // ====================================
 
+let aguardandoObservacao =
+    JSON.parse(
+        localStorage.getItem("aguardandoObservacao")
+    ) || false;
+
 let aguardandoNF =
     JSON.parse(
         localStorage.getItem(
@@ -269,6 +274,25 @@ async function sendMessage() {
 
         return;
     }
+    if (aguardandoObservacao) {
+
+        viagem.observacao = texto.trim();
+
+        aguardandoObservacao = false;
+
+        localStorage.setItem(
+            "aguardandoObservacao",
+            false
+        );
+
+        await atualizarMongo();
+
+        bot("✅ Observação registrada.");
+
+        novaViagem();
+
+        return;
+    }
     processar(texto);
 }
 
@@ -481,6 +505,7 @@ async function registrarEtapa() {
                 latitude: localizacao.latitude,
                 longitude: localizacao.longitude
             };
+
             statusEtapa = 9;
 
             viagem.statusEtapa = 9;
@@ -489,7 +514,16 @@ async function registrarEtapa() {
 
             await atualizarMongo();
 
-            novaViagem();
+            aguardandoObservacao = true;
+
+            localStorage.setItem(
+                "aguardandoObservacao",
+                true
+            );
+
+            bot("✅ Retorno registrado");
+
+            bot("📝 Alguma observação sobre a viagem?");
 
             return;
 
@@ -617,6 +651,14 @@ async function inicializarSistema() {
         );
 
     }
+
+    if (aguardandoObservacao) {
+
+    bot(
+        "📝 Alguma observação sobre a viagem?"
+    );
+
+}
 
 }
 
