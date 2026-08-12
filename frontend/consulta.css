@@ -104,25 +104,25 @@ button:hover {
     color: #FFE600;
 }
 
-#detalhes {
+.detalhes-card {
+    transform: translateY(-10px);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
 
-    background: #151515;
-
-    border: 1px solid #222;
-
-    border-radius: 15px;
-
-    padding: 20px;
-
-    margin-top: 20px;
+    transition:
+        all 0.35s cubic-bezier(.4,0,.2,1);
 }
 
-#detalhes h2 {
-
-    color: #FFE600;
-
-    margin-top: 0;
+.detalhes-card.aberto {
+    transform: translateY(0);
+    max-height: 500px;
+    opacity: 1;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #555;
 }
+
 
 .etapa {
 

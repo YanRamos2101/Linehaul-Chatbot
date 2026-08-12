@@ -132,22 +132,43 @@ function mostrarResultados(viagens) {
 
 }
 
+let detalheAberto = null;
+
 async function verDetalhes(id) {
-
-    const resposta =
-        await fetch(
-            `${API_URL}/movimentos/${id}`
-        );
-
-    const viagem =
-        await resposta.json();
 
     const container =
         document.getElementById(`detalhes-${id}`);
 
-    container.innerHTML = `
-        <hr>
+    // Fecha o que já está aberto
+    if (detalheAberto && detalheAberto !== container) {
 
+        detalheAberto.classList.remove("aberto");
+
+        setTimeout(() => {
+            detalheAberto.innerHTML = "";
+        }, 400);
+    }
+
+    // Se clicou no mesmo card, fecha
+    if (container === detalheAberto) {
+
+        container.classList.remove("aberto");
+
+        setTimeout(() => {
+            container.innerHTML = "";
+        }, 400);
+
+        detalheAberto = null;
+        return;
+    }
+
+    const resposta =
+        await fetch(`${API_URL}/movimentos/${id}`);
+
+    const viagem =
+        await resposta.json();
+
+    container.innerHTML = `
         <p>✅ Início Carregamento:
         ${viagem.InicioCarregamento?.dataHora || "-"}</p>
 
@@ -173,6 +194,11 @@ async function verDetalhes(id) {
         ${viagem.Retorno?.dataHora || "-"}</p>
     `;
 
+    setTimeout(() => {
+        container.classList.add("aberto");
+    }, 10);
+
+    detalheAberto = container;
 }
 
 function exportarExcel() {
