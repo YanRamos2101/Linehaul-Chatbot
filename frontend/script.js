@@ -150,6 +150,11 @@ function atualizarBotao() {
 
         case 8:
             botao.innerText =
+                "INFORMAR OBSERVAÇÃO";
+            break;
+
+        case 9:
+            botao.innerText =
                 "RETORNO";
             break;
 
@@ -195,7 +200,7 @@ function mostrarEtapaAtual() {
             bot("📦 Próxima etapa: FIM CONFERÊNCIA");
             break;
 
-        case 8:
+        case 9:
             bot("📦 Próxima etapa: RETORNO");
             break;
 
@@ -276,7 +281,8 @@ async function sendMessage() {
     }
     if (aguardandoObservacao) {
 
-        viagem.observacao = texto.trim();
+        viagem.observacao =
+            texto.trim() || "Sem observações";
 
         aguardandoObservacao = false;
 
@@ -285,11 +291,19 @@ async function sendMessage() {
             false
         );
 
+        statusEtapa = 9;
+
+        viagem.statusEtapa = 9;
+
+        salvarLocal();
+
         await atualizarMongo();
 
         bot("✅ Observação registrada.");
 
-        novaViagem();
+        atualizarBotao();
+
+        mostrarEtapaAtual();
 
         return;
     }
@@ -486,19 +500,28 @@ async function registrarEtapa() {
                 dataHora: new Date().toLocaleString()
             };
 
-            statusEtapa = 8;
-
             viagem.statusEtapa = 8;
+
+            statusEtapa = 8;
 
             salvarLocal();
 
             await atualizarMongo();
 
+            aguardandoObservacao = true;
+
+            localStorage.setItem(
+                "aguardandoObservacao",
+                true
+            );
+
             bot("✅ Fim Conferência registrada");
 
-            break;
+            bot("📝 Alguma observação sobre a viagem?");
 
-        case 8:
+            return;
+
+        case 9:
 
             viagem.Retorno = {
                 dataHora: new Date().toLocaleString(),
@@ -506,9 +529,9 @@ async function registrarEtapa() {
                 longitude: localizacao.longitude
             };
 
-            statusEtapa = 9;
+            statusEtapa = 10;
 
-            viagem.statusEtapa = 9;
+            viagem.statusEtapa = 10;
 
             salvarLocal();
 
