@@ -37,7 +37,7 @@ const MovimentoSchema = new mongoose.Schema({
 
     statusEtapa: Number,
 
-    aguardandoObservacao: {
+    observacao: {
         type: String,
         default: ""
     },

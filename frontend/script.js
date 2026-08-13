@@ -289,6 +289,8 @@ async function sendMessage() {
 
         viagem.observacao =
             texto.trim() || "Sem observações";
+        console.log("OBS:", viagem.observacao);
+
 
         aguardandoObservacao = false;
 
