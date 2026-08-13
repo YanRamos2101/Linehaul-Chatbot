@@ -83,7 +83,8 @@ function obterStatusTexto(status) {
         6: "Início Descarga",
         7: "Fim Descarga",
         8: "Fim Conferência",
-        9: "Finalizada"
+        9: "Retornando",
+        10: "Finalizada",
     };
 
     return statusMap[status] || "Desconhecido";
