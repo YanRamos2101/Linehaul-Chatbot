@@ -200,14 +200,20 @@ function mostrarEtapaAtual() {
             bot("📦 Próxima etapa: FIM CONFERÊNCIA");
             break;
 
+        case 8:
+            bot("📝 Aguardando observação da viagem");
+            break;
+
         case 9:
             bot("📦 Próxima etapa: RETORNO");
             break;
+
 
         default:
             bot("✅ Viagem finalizada.");
     }
 }
+
 
 // ====================================
 // ENVIO
@@ -537,16 +543,11 @@ async function registrarEtapa() {
 
             await atualizarMongo();
 
-            aguardandoObservacao = true;
-
-            localStorage.setItem(
-                "aguardandoObservacao",
-                true
-            );
-
             bot("✅ Retorno registrado");
 
-            bot("📝 Alguma observação sobre a viagem?");
+            bot("✅ Viagem finalizada");
+
+            novaViagem();
 
             return;
 
@@ -845,6 +846,28 @@ async function recuperarViagemMongo() {
                 false
             );
 
+        }
+
+        if (
+            viagem.statusEtapa === 8 &&
+            !viagem.observacao
+        ) {
+
+            aguardandoObservacao = true;
+
+            localStorage.setItem(
+                "aguardandoObservacao",
+                true
+            );
+
+        } else {
+
+            aguardandoObservacao = false;
+
+            localStorage.setItem(
+                "aguardandoObservacao",
+                false
+            );
         }
 
         salvarLocal();
