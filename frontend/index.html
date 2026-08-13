@@ -15,7 +15,33 @@
 
 </head>
 
-    
+<div id="modalConfirmacao" class="modal">
+
+    <div class="modal-content">
+
+        <h3>Confirmar etapa</h3>
+
+        <p id="textoConfirmacao"></p>
+
+        <div class="modal-botoes">
+
+            <button
+                class="btn-cancelar"
+                onclick="fecharModal()">
+                Cancelar
+            </button>
+
+            <button
+                class="btn-confirmar"
+                onclick="confirmarEtapa()">
+                Confirmar
+            </button>
+
+        </div>
+
+    </div>
+
+</div> 
 
 
 <body>
@@ -46,7 +72,7 @@
 
         <button
             id="btnEtapa"
-            onclick="registrarEtapa()">
+            onclick="abrirModal()">
 
             INÍCIO CARREGAMENTO
 

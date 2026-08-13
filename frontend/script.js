@@ -77,6 +77,31 @@ function user(msg) {
     chat.scrollTop = chat.scrollHeight;
 }
 
+// MODAL
+
+function abrirModal() {
+
+    const etapaAtual =
+        document.getElementById("btnEtapa")
+            .innerText;
+
+    document.getElementById(
+        "textoConfirmacao"
+    ).innerText =
+        `Deseja registrar a etapa "${etapaAtual}"?`;
+
+    document
+        .getElementById("modalConfirmacao")
+        .classList.add("ativo");
+}
+
+function fecharModal() {
+
+    document
+        .getElementById("modalConfirmacao")
+        .classList.remove("ativo");
+}
+
 // ====================================
 // SALVAR
 // ====================================
@@ -629,6 +654,16 @@ function recuperarCadastro() {
 
             mostrarEtapaAtual();
     }
+}
+
+//WRAPPER
+
+async function confirmarEtapa() {
+
+    fecharModal();
+
+    await registrarEtapa();
+
 }
 
 // ====================================
