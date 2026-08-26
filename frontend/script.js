@@ -103,6 +103,37 @@ function fecharModal() {
 }
 
 // ====================================
+// CDD (OPÇÕES FIXAS)
+// ====================================
+const CDDS_VALIDOS = ["NIT", "PAV", "CTO", "CGR"];
+
+function mostrarOpcoesCDD() {
+    const botoes = CDDS_VALIDOS.map(
+        (cdd) =>
+            `<button class="opcao-cdd" onclick="selecionarCDD('${cdd}')">${cdd}</button>`
+    ).join("");
+    chat.innerHTML += `<div class="bot opcoes-cdd">${botoes}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function selecionarCDD(cdd) {
+    user("📍 CDD: " + cdd);
+    registrarCDD(cdd);
+}
+
+async function registrarCDD(cdd) {
+    viagem.cdd = cdd;
+    etapa = 4;
+    salvarLocal();
+    await criarViagemMongo();
+    bot("✅ Viagem criada com CDD " + cdd + "!");
+    bot("Agora utilize o botão da etapa.");
+    document.getElementById("btnEtapa").style.display = "block";
+    atualizarBotao();
+    mostrarEtapaAtual();
+}
+
+// ====================================
 // SALVAR
 // ====================================
 
@@ -351,51 +382,27 @@ async function processar(texto) {
 
     switch (etapa) {
 
-        case 0:
-
-            viagem.motorista = texto;
-
+       case 0:
+            viagem.motorista = texto.trim();
             etapa++;
-
             salvarLocal();
-
             bot("🚚 Informe a placa:");
-
             break;
-
         case 1:
-
-            viagem.placa = texto;
-
+            viagem.placa = texto.trim().toUpperCase();
             etapa++;
-
             salvarLocal();
-
-            bot("📍 Informe o CDD:");
-
+            bot("📍 Selecione o CDD:");
+            mostrarOpcoesCDD();
             break;
-
         case 2:
-
-            viagem.cdd = texto;
-
-            etapa = 4;
-
-            salvarLocal();
-
-            await criarViagemMongo();
-
-            bot("✅ Viagem criada!");
-
-            bot("Agora utilize o botão da etapa.");
-
-            document.getElementById("btnEtapa")
-                .style.display = "block";
-
-            atualizarBotao();
-
-            mostrarEtapaAtual();
-
+            const cdd = texto.trim().toUpperCase();
+            if (!CDDS_VALIDOS.includes(cdd)) {
+                bot("⚠️ CDD inválido. Selecione uma das opções:");
+                mostrarOpcoesCDD();
+                break;
+            }
+            await registrarCDD(cdd);
             break;
     }
 }

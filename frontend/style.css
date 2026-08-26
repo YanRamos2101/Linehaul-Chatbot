@@ -383,3 +383,17 @@ body {
 .btn-confirmar:hover {
     background: #218838;
 }
+
+.opcoes-cdd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.opcao-cdd {
+    /* copiar cor, borda, radius e fonte do #btnEtapa */
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
