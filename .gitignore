@@ -3,3 +3,4 @@ backend/atlas.env
 .env
 logs/
 desktop.ini
+*.env

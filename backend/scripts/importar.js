@@ -21,13 +21,6 @@ async function importar() {
 
     try {
 
-        console.log(
-            "URI Mongo:",
-            process.env.MONGODB_URI
-                ? "✅ encontrada"
-                : "❌ não encontrada"
-        );
-
         await mongoose.connect(
             process.env.MONGODB_URI
         );
