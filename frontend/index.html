@@ -67,7 +67,10 @@
             <button onclick="sendMessage()">
                 Enviar
             </button>
-
+            <input type="file" id="inputFoto" accept="image/*" capture="environment" style="display:none">
+            <button id="btnFoto" type="button" onclick="document.getElementById('inputFoto').click()" style="display:none">📷 Adicionar foto</button>
+            <img id="previewFoto" alt="Prévia da foto" style="display:none; max-width:150px; border-radius:8px; margin-top:8px">
+            <button id="btnConfirmarObservacao" type="button" onclick="confirmarObservacao()" style="display:none">✅ Confirmar observação</button>
         </div>
 
         <button

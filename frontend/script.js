@@ -1,3 +1,6 @@
+// ====================================
+// DADOS
+// ====================================
 function lerLocal(chave, padrao) {
     try {
         const valor = localStorage.getItem(chave);
@@ -13,8 +16,14 @@ let viagem = lerLocal("viagem", {});
 let etapa = lerLocal("etapaCadastro", 0);
 let statusEtapa = lerLocal("statusEtapa", 1);
 
+// Foto da observação (etapa 8)
+let fotoSelecionada = null;
+
 const chat = document.getElementById("chat");
 
+// ====================================
+// AUTENTICAÇÃO
+// ====================================
 const API_TOKEN = "2XnC08mtypNCR9rs";
 
 async function obterLocalizacao() {
@@ -178,10 +187,49 @@ function mostrarEtapaAtual() {
 }
 
 // ====================================
+// OBSERVAÇÃO
+// ====================================
+async function finalizarObservacao() {
+    const texto = document.getElementById("userInput").value;
+    viagem.observacao = texto.trim() || "Sem observações";
+
+    if (fotoSelecionada) {
+        viagem.foto = fotoSelecionada;
+    }
+
+    aguardandoObservacao = false;
+    localStorage.setItem("aguardandoObservacao", false);
+    statusEtapa = 9;
+    viagem.statusEtapa = 9;
+    salvarLocal();
+    await atualizarMongo();
+
+    document.getElementById("btnFoto").style.display = "none";
+    document.getElementById("previewFoto").style.display = "none";
+    document.getElementById("btnConfirmarObservacao").style.display = "none";
+    document.getElementById("userInput").value = "";
+    fotoSelecionada = null;
+
+    bot("✅ Observação registrada.");
+    atualizarBotao();
+    mostrarEtapaAtual();
+}
+
+function confirmarObservacao() {
+    finalizarObservacao();
+}
+
+// ====================================
 // ENVIO
 // ====================================
 async function sendMessage() {
     let texto = document.getElementById("userInput").value;
+
+    // Etapa de observação: finaliza texto + foto juntos, mesmo sem texto
+    if (aguardandoObservacao) {
+        await finalizarObservacao();
+        return;
+    }
 
     if (texto.trim() === "") {
         switch (etapa) {
@@ -215,20 +263,6 @@ async function sendMessage() {
         salvarLocal();
         await atualizarMongo();
         bot("✅ NF registrada: " + viagem.nf);
-        atualizarBotao();
-        mostrarEtapaAtual();
-        return;
-    }
-
-    if (aguardandoObservacao) {
-        viagem.observacao = texto.trim() || "Sem observações";
-        aguardandoObservacao = false;
-        localStorage.setItem("aguardandoObservacao", false);
-        statusEtapa = 9;
-        viagem.statusEtapa = 9;
-        salvarLocal();
-        await atualizarMongo();
-        bot("✅ Observação registrada.");
         atualizarBotao();
         mostrarEtapaAtual();
         return;
@@ -273,7 +307,6 @@ async function processar(texto) {
 async function registrarEtapa() {
     let localizacao = null;
 
-    // Tratamento de erro de geolocalização (Passo 12)
     try {
         localizacao = await obterLocalizacao();
     } catch (erro) {
@@ -359,6 +392,9 @@ async function registrarEtapa() {
             localStorage.setItem("aguardandoObservacao", true);
             bot("✅ Fim Conferência registrada");
             bot("📝 Alguma observação sobre a viagem?");
+            // Mostra os botões de foto e confirmação
+            document.getElementById("btnFoto").style.display = "block";
+            document.getElementById("btnConfirmarObservacao").style.display = "block";
             return;
         case 9:
             viagem.Retorno = {
@@ -425,7 +461,6 @@ function recuperarCadastro() {
     }
 }
 
-// WRAPPER
 async function confirmarEtapa() {
     fecharModal();
     await registrarEtapa();
@@ -454,12 +489,46 @@ async function inicializarSistema() {
         bot("📦 Informe a NF para continuar:");
     }
 
+    // Se recarregou a página no meio da observação, reaparece os botões
     if (aguardandoObservacao) {
         bot("📝 Alguma observação sobre a viagem?");
+        document.getElementById("btnFoto").style.display = "block";
+        document.getElementById("btnConfirmarObservacao").style.display = "block";
     }
 }
 
 inicializarSistema();
+
+// ====================================
+// FOTO (etapa 8 - observação)
+// Redimensiona para no máximo 800px e comprime em JPEG 70%
+// para não estourar o limite de 16MB do MongoDB
+// ====================================
+document.getElementById("inputFoto").addEventListener("change", function (e) {
+    const arquivo = e.target.files[0];
+    if (!arquivo) return;
+
+    const leitor = new FileReader();
+    leitor.onload = function (ev) {
+        const img = new Image();
+        img.onload = function () {
+            const canvas = document.createElement("canvas");
+            const escala = Math.min(1, 800 / Math.max(img.width, img.height));
+            canvas.width = Math.round(img.width * escala);
+            canvas.height = Math.round(img.height * escala);
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            fotoSelecionada = canvas.toDataURL("image/jpeg", 0.7);
+
+            const preview = document.getElementById("previewFoto");
+            preview.src = fotoSelecionada;
+            preview.style.display = "block";
+        };
+        img.src = ev.target.result;
+    };
+    leitor.readAsDataURL(arquivo);
+});
 
 // ====================================
 // SALVAR NO MONGODB
@@ -490,7 +559,6 @@ async function criarViagemMongo() {
     }
 }
 
-// Valida a resposta do servidor antes de confirmar
 async function atualizarMongo() {
     try {
         if (!viagem._id) {
@@ -571,9 +639,13 @@ function novaViagem() {
     viagem = {};
     etapa = 0;
     statusEtapa = 1;
+    fotoSelecionada = null;
     chat.innerHTML = "";
     document.getElementById("userInput").value = "";
     document.getElementById("btnEtapa").style.display = "none";
+    document.getElementById("btnFoto").style.display = "none";
+    document.getElementById("previewFoto").style.display = "none";
+    document.getElementById("btnConfirmarObservacao").style.display = "none";
     bot("🚚 Bem-vindo ao Fulfillment Linehaul");
     bot("👤 Informe o nome do motorista");
 }

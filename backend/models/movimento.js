@@ -88,6 +88,11 @@ const movimentoSchema = new mongoose.Schema(
             type: String,
             default: null
         },
+        // 📷 Foto do produto (Base64, redimensionada no frontend)
+        foto: {
+            type: String,
+            default: null
+        },
         // 🔁 Marca viagens que são recarga (2ª+ viagem para o mesmo CDD no mesmo dia)
         ehRecarga: {
             type: Boolean,

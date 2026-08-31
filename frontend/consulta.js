@@ -131,11 +131,16 @@ async function verDetalhes(id) {
         <b>Observação:</b>
         ${escaparHTML(viagem.observacao || "Sem observações")}
         </p>
+
+        ${viagem.foto
+            ? `<p><b>📷 Foto do produto:</b></p>
+               <img src="${viagem.foto}" style="max-width:200px; border-radius:8px" alt="Foto do produto">`
+            : ""}
     `;
 
     container.classList.add("aberto");
     detalheAberto = container;
 }
 
-// sem precisar de pesquisa. Sem esta chamada, a página abre vazia.
+// Carrega TODAS as viagens ao abrir a página
 carregarViagens();

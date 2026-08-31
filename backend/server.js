@@ -12,7 +12,8 @@ const Movimento = require("./models/movimento");
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+// Limite maior para aceitar a foto em Base64 (padrão é 100KB)
+app.use(express.json({ limit: "10mb" }));
 app.use(
     express.static(
         path.join(__dirname, "../frontend")
@@ -45,7 +46,7 @@ const CAMPOS_PERMITIDOS = [
     "motorista", "placa", "cdd", "nf",
     "InicioCarregamento", "FimCarregamento", "Saida", "Chegada",
     "InicioDescarga", "FimDescarga", "FimConferencia", "Retorno",
-    "statusEtapa", "observacao"
+    "statusEtapa", "observacao", "foto"
 ];
 
 function filtrarCampos(corpo) {
@@ -256,4 +257,6 @@ app.get("/exportar", exigirToken, async (req, res) => {
     }
 });
 
-app.listen(process.env.PORT, "0.0.0.0", () => {});
+app.listen(process.env.PORT, "0.0.0.0", () => {
+    console.log(`🚀 Servidor rodando na porta ${process.env.PORT}`);
+});
