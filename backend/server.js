@@ -39,6 +39,8 @@ function exigirToken(req, res, next) {
 }
 
 // Campos permitidos para criação/atualização (Passo 5)
+// NOTA: ehRecarga NÃO está aqui de propósito — o servidor é a única
+// fonte da verdade para esse campo, evitando que o cliente o falsifique.
 const CAMPOS_PERMITIDOS = [
     "motorista", "placa", "cdd", "nf",
     "InicioCarregamento", "FimCarregamento", "Saida", "Chegada",
@@ -63,10 +65,29 @@ app.get("/", (req, res) => {
     res.send("API funcionando!");
 });
 
-// POST /movimentos (Passo 4 + 5)
+// POST /movimentos (Passo 4 + 5 + detecção de recarga)
 app.post("/movimentos", exigirToken, async (req, res) => {
     try {
-        const movimento = await Movimento.create(filtrarCampos(req.body));
+        const dados = filtrarCampos(req.body);
+
+        // 🔁 Detecção de recarga: 2ª+ viagem para o mesmo CDD no mesmo dia
+        if (dados.cdd) {
+            const inicioDoDia = new Date();
+            inicioDoDia.setHours(0, 0, 0, 0);
+            const fimDoDia = new Date();
+            fimDoDia.setHours(23, 59, 59, 999);
+
+            const viagensHoje = await Movimento.countDocuments({
+                cdd: dados.cdd,
+                criadoEm: { $gte: inicioDoDia, $lte: fimDoDia }
+            });
+
+            if (viagensHoje > 0) {
+                dados.ehRecarga = true;
+            }
+        }
+
+        const movimento = await Movimento.create(dados);
         res.status(201).json({
             sucesso: true,
             dados: movimento
@@ -80,7 +101,7 @@ app.post("/movimentos", exigirToken, async (req, res) => {
     }
 });
 
-// GET /movimentos (Passo 8 - adicionado try/catch)
+// GET /movimentos (Passo 8)
 app.get("/movimentos", async (req, res) => {
     try {
         const movimentos = await Movimento.find().sort({ criadoEm: -1 });
@@ -140,7 +161,7 @@ app.put("/movimentos/:id", exigirToken, async (req, res) => {
     }
 });
 
-// GET /movimentos/nf/:nf (Passo 9 - retorna 404 quando não encontra)
+// GET /movimentos/nf/:nf (Passo 9)
 app.get("/movimentos/nf/:nf", async (req, res) => {
     try {
         const viagem = await Movimento.findOne({ nf: req.params.nf });
@@ -156,7 +177,7 @@ app.get("/movimentos/nf/:nf", async (req, res) => {
     }
 });
 
-// GET /consultas (Passo 6 - escape de regex)
+// GET /consultas (Passo 6)
 app.get("/consultas", async (req, res) => {
     try {
         const filtro = {};
@@ -170,7 +191,7 @@ app.get("/consultas", async (req, res) => {
         }
 
         if (req.query.motorista) {
-            const termo = req.query.motorista.replace(/[-\/\^$*+?.()|[\]{}]/g, "\$&");
+            const termo = req.query.motorista.replace(/[.*+?^${}()|[\]\]/g, "\$&");
             filtro.motorista = new RegExp(termo, "i");
         }
 
@@ -195,6 +216,7 @@ app.get("/exportar", exigirToken, async (req, res) => {
             { header: "CDD", key: "cdd", width: 15 },
             { header: "NF", key: "nf", width: 15 },
             { header: "Status", key: "statusEtapa", width: 20 },
+            { header: "Recarga", key: "ehRecarga", width: 10 },
             { header: "Início Carregamento", key: "inicio", width: 25 },
             { header: "Fim Carregamento", key: "fim", width: 25 },
             { header: "Saída", key: "saida", width: 25 },
@@ -209,6 +231,7 @@ app.get("/exportar", exigirToken, async (req, res) => {
                 cdd: v.cdd,
                 nf: v.nf,
                 statusEtapa: v.statusEtapa,
+                ehRecarga: v.ehRecarga ? "Sim" : "Não",
                 inicio: v.InicioCarregamento?.dataHora,
                 fim: v.FimCarregamento?.dataHora,
                 saida: v.Saida?.dataHora,

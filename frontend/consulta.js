@@ -67,6 +67,7 @@ function mostrarResultados(viagens) {
                 <p><b>CDD:</b> ${escaparHTML(viagem.cdd || "-")}</p>
                 <p><b>NF:</b> ${escaparHTML(viagem.nf || "-")}</p>
                 <p><b>Status:</b> ${obterStatusTexto(viagem.statusEtapa)}</p>
+                ${viagem.ehRecarga ? '<p class="recarga-badge">🔁 Recarga</p>' : ''}
 
                 <button onclick="verDetalhes('${escaparHTML(viagem._id)}')">
                     Ver Detalhes
@@ -138,3 +139,5 @@ async function verDetalhes(id) {
     container.classList.add("aberto");
     detalheAberto = container;
 }
+// Carrega todas as viagens ao abrir a página
+carregarViagens();

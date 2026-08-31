@@ -87,6 +87,15 @@ const movimentoSchema = new mongoose.Schema(
         observacao: {
             type: String,
             default: null
+        },
+        // 🔁 Marca viagens que são recarga (2ª+ viagem para o mesmo CDD no mesmo dia)
+        ehRecarga: {
+            type: Boolean,
+            default: false
+        },
+        criadoEm: {
+            type: Date,
+            default: Date.now
         }
     },
     {
