@@ -191,7 +191,7 @@ app.get("/consultas", async (req, res) => {
         }
 
         if (req.query.motorista) {
-            const termo = req.query.motorista.replace(/[.*+?^${}()|[\]\]/g, "\$&");
+            const termo = req.query.motorista.replace(/[-\/\^$*+?.()|[\]{}]/g, "\$&");
             filtro.motorista = new RegExp(termo, "i");
         }
 
@@ -256,6 +256,4 @@ app.get("/exportar", exigirToken, async (req, res) => {
     }
 });
 
-app.listen(process.env.PORT, "0.0.0.0", () => {
-    console.log(`🚀 Servidor rodando na porta ${process.env.PORT}`);
-});
+app.listen(process.env.PORT, "0.0.0.0", () => {});

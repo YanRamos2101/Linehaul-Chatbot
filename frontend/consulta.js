@@ -49,7 +49,6 @@ function obterStatusTexto(status) {
     return statusMap[status] || "Desconhecido";
 }
 
-// Todos os dados vindos do banco passam por escaparHTML
 function mostrarResultados(viagens) {
     const resultado = document.getElementById("resultado");
     resultado.innerHTML = "";
@@ -84,7 +83,6 @@ let detalheAberto = null;
 async function verDetalhes(id) {
     const container = document.getElementById(`detalhes-${id}`);
 
-    // Fecha o que já está aberto
     if (detalheAberto && detalheAberto !== container) {
         detalheAberto.classList.remove("aberto");
         setTimeout(() => {
@@ -92,7 +90,6 @@ async function verDetalhes(id) {
         }, 400);
     }
 
-    // Se clicou no mesmo card, fecha
     if (container === detalheAberto) {
         container.classList.remove("aberto");
         setTimeout(() => {
@@ -139,5 +136,6 @@ async function verDetalhes(id) {
     container.classList.add("aberto");
     detalheAberto = container;
 }
-// Carrega todas as viagens ao abrir a página
+
+// sem precisar de pesquisa. Sem esta chamada, a página abre vazia.
 carregarViagens();
