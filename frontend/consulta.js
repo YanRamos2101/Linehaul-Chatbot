@@ -1,5 +1,36 @@
 const API_URL = "https://linehaul-chatbot.onrender.com";
 
+// ====================================
+// EXPORTAÇÃO EXCEL (a rota /exportar exige token)
+// ====================================
+const API_TOKEN = "SUA_CHAVE"; // MESMA chave do servidor e do script.js
+
+async function exportarExcel() {
+    try {
+        const resposta = await fetch(`${API_URL}/exportar`, {
+            headers: { "x-token": API_TOKEN }
+        });
+
+        if (!resposta.ok) {
+            alert("Erro ao exportar. Verifique o token e tente novamente.");
+            return;
+        }
+
+        const blob = await resposta.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "viagens.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    } catch (erro) {
+        console.error("Erro ao exportar:", erro);
+        alert("Falha de conexão ao exportar.");
+    }
+}
+
 async function carregarViagens() {
     const resposta = await fetch(`${API_URL}/consultas`);
     const viagens = await resposta.json();
