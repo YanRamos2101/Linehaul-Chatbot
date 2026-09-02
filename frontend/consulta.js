@@ -3,7 +3,7 @@ const API_URL = "https://linehaul-chatbot.onrender.com";
 // ====================================
 // EXPORTAÇÃO EXCEL (a rota /exportar exige token)
 // ====================================
-const API_TOKEN = "SUA_CHAVE"; // MESMA chave do servidor e do script.js
+const API_TOKEN = "2XnC08mtypNCR9rs"; // MESMA chave do servidor e do script.js
 
 async function exportarExcel() {
     try {
